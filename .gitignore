@@ -1,0 +1,33 @@
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Java / Maven
+target/
+*.class
+*.log
+
+# Node / frontend
+node_modules/
+dist/
+dist_back/
+npm-debug.log*
+yarn-error.log
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# Build archives
+*.zip
+
+# Local secrets / runtime config
+.env
+.env.*
+*.local
+

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ys.stock.mapper.OrderInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.ys.stock.pojo.OrderInfo">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="orderNo" column="order_no" jdbcType="VARCHAR"/>
+        <result property="paymentType" column="payment_type" jdbcType="VARCHAR"/>
+        <result property="userId" column="user_id" jdbcType="BIGINT"/>
+        <result property="productId" column="product_id" jdbcType="BIGINT"/>
+        <result property="totalFee" column="total_fee" jdbcType="INTEGER"/>
+        <result property="codeUrl" column="code_url" jdbcType="VARCHAR"/>
+        <result property="orderStatus" column="order_status" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,title,order_no,
+        payment_type,user_id,product_id,
+        total_fee,code_url,order_status,
+        create_time,update_time
+    </sql>
+    <insert id="insert" parameterType="com.ys.stock.pojo.OrderInfo">
+        INSERT INTO t_order_info (id, title, order_no, payment_type, user_id, product_id, total_fee, code_url,
+                                  order_status, create_time, update_time)
+        values (#{id}, #{title}, #{orderNo}, #{paymentType}, #{userId}, #{productId}, #{totalFee}, #{codeUrl},
+                #{orderStatus}, #{createTime}, #{updateTime})
+    </insert>
+    <update id="updateStatus">
+        update t_order_info
+        set order_status = #{status}
+        where order_no = #{orderNo}
+    </update>
+
+    <select id="listOrderByCreateTimeDesc" resultType="com.ys.stock.pojo.OrderInfo">
+        select *
+        from t_order_info
+        order by create_time desc
+    </select>
+    <select id="getOrderStatus" resultType="java.lang.String">
+        SELECT order_status
+        from t_order_info
+        where order_no = #{orderNo}
+    </select>
+    <select id="getOrderByOrderNo" resultType="com.ys.stock.pojo.OrderInfo">
+        select *
+        from t_order_info
+        where order_no = #{orderNo}
+    </select>
+    <select id="getNoPayOrderByProductId" resultType="com.ys.stock.pojo.OrderInfo">
+        SELECT *
+        from t_order_info
+        where id = #{productId}
+          and payment_type = #{paymentType}
+          and order_status = #{orderStatus}
+
+    </select>
+    <select id="getOrderList" resultType="com.ys.stock.pojo.OrderInfo">
+        select *
+        from t_order_info
+        where user_id = #{userid}
+    </select>
+    <select id="selectList" resultType="com.ys.stock.pojo.OrderInfo">
+        SELECT *
+        FROM t_order_info
+        WHERE
+              <![CDATA[create_time <= #{instant}]]>-- 查询创建时间早于 instant 的订单
+          AND order_status = #{order_status} -- 查询指定订单状态的订单
+          AND payment_type = #{paymentType} -- 查询指定支付类型的订单
+    </select>
+
+</mapper>

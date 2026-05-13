@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ys.stock.mapper.StockNewsMapper">
+
+    <resultMap id="BaseResultMap" type="com.ys.stock.pojo.StockNews">
+        <id property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="url" column="url" jdbcType="VARCHAR"/>
+        <result property="info" column="info" jdbcType="VARCHAR"/>
+        <result property="time" column="time" jdbcType="VARCHAR"/>
+    </resultMap>
+    <insert id="insertBatch">
+        insert into stock_news
+        (id,url,info,time)
+        values
+        <foreach collection="StockNews" item="news" separator=",">
+            (
+            #{news.id,jdbcType=VARCHAR},#{news.url,jdbcType=VARCHAR},#{news.info,jdbcType=VARCHAR},#{news.time,jdbcType=VARCHAR})
+        </foreach>
+    </insert>
+    <select id="selectAll" resultType="com.ys.stock.pojo.StockNews">
+        select * from stock_news order by time desc
+    </select>
+
+
+</mapper>

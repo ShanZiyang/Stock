@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ys.stock.mapper.SysLogMapper">
+
+    <resultMap id="BaseResultMap" type="com.ys.stock.pojo.SysLog">
+        <!-- 日志主键字段 -->
+        <id property="operId" column="oper_id" jdbcType="BIGINT"/>
+
+        <!-- 模块标题字段 -->
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+
+        <!-- 业务类型字段（0其它 1新增 2修改 3删除） -->
+        <result property="businessType" column="business_type" jdbcType="INTEGER"/>
+
+        <!-- 方法名称字段 -->
+        <result property="method" column="method" jdbcType="VARCHAR"/>
+
+        <!-- 请求方式字段 -->
+        <result property="requestMethod" column="request_method" jdbcType="VARCHAR"/>
+
+        <!-- 操作类别字段（0其它 1后台用户 2手机端用户） -->
+        <result property="operatorType" column="operator_type" jdbcType="INTEGER"/>
+
+        <!-- 操作人员字段 -->
+        <result property="operName" column="oper_name" jdbcType="VARCHAR"/>
+
+        <!-- 请求URL字段 -->
+        <result property="operUrl" column="oper_url" jdbcType="VARCHAR"/>
+
+        <!-- 主机地址字段 -->
+        <result property="operIp" column="oper_ip" jdbcType="VARCHAR"/>
+
+        <!-- 操作地点字段 -->
+        <result property="operLocation" column="oper_location" jdbcType="VARCHAR"/>
+
+        <!-- 请求参数字段 -->
+        <result property="operParam" column="oper_param" jdbcType="VARCHAR"/>
+
+        <!-- 返回参数字段 -->
+        <result property="jsonResult" column="json_result" jdbcType="VARCHAR"/>
+
+        <!-- 操作状态字段（0正常 1异常） -->
+        <result property="status" column="status" jdbcType="INTEGER"/>
+
+        <!-- 错误消息字段 -->
+        <result property="errorMsg" column="error_msg" jdbcType="VARCHAR"/>
+
+        <!-- 操作时间字段 -->
+        <result property="operTime" column="oper_time" jdbcType="TIMESTAMP"/>
+
+        <!-- 消耗时间字段 -->
+        <result property="costTime" column="cost_time" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="selectLogVo">
+        select oper_id,
+               title,
+               business_type,
+               method,
+               request_method,
+               operator_type,
+               oper_name,
+               oper_url,
+               oper_ip,
+               oper_location,
+               oper_param,
+               json_result,
+               status,
+               error_msg,
+               oper_time,
+               cost_time
+        from sys_log
+    </sql>
+
+    <sql id="Base_Column_List">
+        oper_id,oper_name,
+        title,oper_time,request_method,
+        oper_param,oper_ip,oper_time
+    </sql>
+
+    <insert id="insertOperlog" parameterType="SysLog">
+        insert into sys_log(title, business_type, method, request_method, operator_type, oper_name, oper_url,
+                            oper_ip, oper_location, oper_param, json_result, status, error_msg, cost_time, oper_time)
+        values (#{title}, #{businessType}, #{method}, #{requestMethod}, #{operatorType}, #{operName},
+                #{operUrl}, #{operIp}, #{operLocation}, #{operParam}, #{jsonResult}, #{status}, #{errorMsg},
+                #{costTime}, #{operTime})
+    </insert>
+
+
+    <delete id="deleteOperLogByIds" parameterType="Long">
+        delete from sys_log where oper_id in
+        <foreach collection="array" item="operId" open="(" separator="," close=")">
+            #{operId}
+        </foreach>
+    </delete>
+
+    <select id="selectOperLogById" parameterType="Long" resultMap="BaseResultMap">
+        <include refid="selectLogVo"/>
+        where oper_id = #{operId}
+    </select>
+
+    <update id="cleanOperLog">
+        truncate table sys_log
+    </update>
+
+    <select id="getLogsBy" resultType="com.ys.stock.vo.resp.LogRows">
+        SELECT
+            sl.oper_id   as operId,
+            sl.oper_name  as username,
+            sl.title as operation,
+            sl.cost_time as time,
+	        sl.request_method as method,
+	        sl.oper_param as params,
+	        sl.oper_ip as ip,
+	        sl.oper_time as createTime
+        FROM sys_log as sl
+        where sl.oper_name = #{username}
+          and sl.title = #{operation}
+          and sl.oper_time between #{startTime} and #{endTime}
+    </select>
+    <select id="getLogs" resultType="com.ys.stock.vo.resp.LogRows">
+        SELECT
+            sl.oper_id   as operId,
+            sl.oper_name  as username,
+            sl.title as operation,
+            sl.cost_time as time,
+	        sl.request_method as method,
+	        sl.oper_param as params,
+	        sl.oper_ip as ip,
+	        sl.oper_time as createTime
+        FROM sys_log as sl
+    </select>
+</mapper>

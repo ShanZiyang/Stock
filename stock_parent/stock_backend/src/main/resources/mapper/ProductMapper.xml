@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ys.stock.mapper.ProductMapper">
+
+    <resultMap id="BaseResultMap" type="com.ys.stock.pojo.Product">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="title" column="title" jdbcType="VARCHAR"/>
+            <result property="price" column="price" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,title,price,
+        create_time,update_time
+    </sql>
+    <select id="list" resultType="com.ys.stock.pojo.Product">
+        select * from t_product
+    </select>
+    <select id="selectById" resultType="com.ys.stock.pojo.Product">
+        select * from t_product where id = #{productId}
+    </select>
+</mapper>
