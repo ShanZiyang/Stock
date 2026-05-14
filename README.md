@@ -1,5 +1,6 @@
 # Stock
 
+本科毕业设计项目 理财学习模拟平台。
 Stock is a stock prediction platform composed of:
 
 - `stock_parent`: Java Maven parent project, including the Spring Boot backend and XXL-JOB admin module.
